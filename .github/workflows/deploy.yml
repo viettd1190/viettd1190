@@ -6,9 +6,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
+  deployments: write
 
 concurrency:
   group: "pages"
@@ -33,14 +34,18 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Verify build output
+      - name: Debug build output
         run: |
-          ls -la ./out  # Kiểm tra thư mục build output
+          echo "Build directory structure:"
+          ls -la
+          echo "Build output:"
+          ls -la ./out  # Điều chỉnh theo project
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out # Đảm bảo đường dẫn này khớp với output build thực tế
+          path: ./out # Đảm bảo đúng đường dẫn
+          retention-days: 1
 
   deploy:
     environment:
